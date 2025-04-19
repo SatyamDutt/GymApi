@@ -1,19 +1,16 @@
+import express from 'express';
 import {
-    getAll,
-    createAll,
-    deleteAll,
-    deleteOne,
-    updateGym
-} from "../controllers/gym.controllers.js"
-import express from "express"
+  createGym,
+  getAllGyms,
+  updateGym,
+  deleteGym,
+} from '../controllers/gymController.js';
 
-const route = express.Router()
+const router = express.Router();
 
+router.post('/', createGym);       // Create
+router.get('/', getAllGyms);       // Read all
+router.put('/:id', updateGym);     // Update by ID
+router.delete('/:id', deleteGym);  // Delete by ID
 
-route.get("/",getAll)
-route.post("/",createAll)
-route.delete("/",deleteAll)
-route.delete("/:id",deleteOne)
-route.put("/:id",updateGym)
-
-export default route;
+export default router;

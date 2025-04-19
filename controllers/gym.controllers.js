@@ -1,82 +1,90 @@
-import Gym from "../models/gym.models.js"
+import Gym from '../models/gym.models.js';
 
-export const getAll = async (req,res) => {
-    try {
-        const newGym = await Gym.find();
-        console.log(newGym)
-        res.status(201).json({
-            msg:"Data Found Successfull",
-            newGym
-        })
-    } catch (error) {
-        res.status(500).json({
-            msg:"Error :",
-            error
-        })
+// ✅ CREATE - Add a new gym tool
+export const createGym = async (req, res) => {
+  try {
+    const { gymToolsImage, gymToolsPrice, gymToolsName, gymToolsRatings } = req.body;
+
+    const newGym = new Gym({
+      gymToolsImage,
+      gymToolsPrice,
+      gymToolsName,
+      gymToolsRatings,
+    });
+
+    await newGym.save();
+
+    res.status(201).json({
+      message: 'Gym item created successfully',
+      data: newGym,
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: 'Error creating gym item',
+      error: error.message,
+    });
+  }
+};
+
+// ✅ READ - Get all gym tools
+export const getAllGyms = async (req, res) => {
+  try {
+    const gyms = await Gym.find();
+    res.status(200).json({
+      message: 'Gym items fetched successfully',
+      data: gyms,
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: 'Error fetching gym items',
+      error: error.message,
+    });
+  }
+};
+
+// ✅ UPDATE - Edit a gym tool by ID
+export const updateGym = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const updatedGym = await Gym.findByIdAndUpdate(id, req.body, {
+      new: true,
+      runValidators: true,
+    });
+
+    if (!updatedGym) {
+      return res.status(404).json({ message: 'Gym item not found' });
     }
-}
-export const createAll = async (req,res) => {
-    const {gymToolsImage,gymToolsPrice,gymToolsName,gymToolsRatings} =req.body
-    try {
-        const newGym =  new Gym({gymToolsImage,gymToolsPrice,gymToolsName,gymToolsRatings} );
-        await newGym.save()
-        console.log(newGym)
-        res.status(201).json({
-            msg:"Data Created Successfull",
-            newGym
-        })
-    } catch (error) {
-        res.status(500).json({
-            msg:"Error :",
-            error
-        })
+
+    res.status(200).json({
+      message: 'Gym item updated successfully',
+      data: updatedGym,
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: 'Error updating gym item',
+      error: error.message,
+    });
+  }
+};
+
+// ✅ DELETE - Remove a gym tool by ID
+export const deleteGym = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const deletedGym = await Gym.findByIdAndDelete(id);
+
+    if (!deletedGym) {
+      return res.status(404).json({ message: 'Gym item not found' });
     }
-}
-export const deleteAll = async (req,res) => {
-    try {
-        const newGym = await Gym.deleteMany();
-        console.log(newGym)
-        res.status(201).json({
-            msg:"Data ALl Deleted Successfull",
-            newGym
-        })
-    } catch (error) {
-        res.status(500).json({
-            msg:"Error :",
-            error
-        })
-    }
-}
-export const deleteOne = async (req,res) => {
-    const {id}=req.params
-    try {
-        const newGym = await Gym.findByIdAndDelete();
-        console.log(newGym)
-        res.status(201).json({
-            msg:"Data One Successfull",
-            newGym
-        })
-    } catch (error) {
-        res.status(500).json({
-            msg:"Error :",
-            error
-        })
-    }
-}
-export const updateGym = async (req,res) => {
-    const {id}=req.params
-    const {gymToolsImage,gymToolsPrice,gymToolsName,gymToolsRatings}=req.body
-    try {
-        const newGym = await Gym.findByIdAndUpdate(id,{gymToolsImage,gymToolsPrice,gymToolsName,gymToolsRatings},{new:true});
-        console.log(newGym)
-        res.status(201).json({
-            msg:"Data Updated Successfull",
-            newGym
-        })
-    } catch (error) {
-        res.status(500).json({
-            msg:"Error :",
-            error
-        })
-    }
-}
+
+    res.status(200).json({
+      message: 'Gym item deleted successfully',
+      data: deletedGym,
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: 'Error deleting gym item',
+      error: error.message,
+    });
+  }
+};
