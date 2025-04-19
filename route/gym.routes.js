@@ -10,7 +10,7 @@ import express from "express"
 const route = express.Router()
 
 
-route.get("/GetAll",getAll)
+route.get("/",getAll)
 route.post("/",createAll)
 route.delete("/",deleteAll)
 route.delete("/:id",deleteOne)
